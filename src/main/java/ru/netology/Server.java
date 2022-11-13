@@ -10,16 +10,20 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Server implements Runnable {
+public class Server extends Thread {
 
-    private final int PORT = 9999;
-    private final List<String> validPaths = List.of("/index.html", "/spring.svg", "/spring.png", "/resources.html", "/styles.css", "/app.js", "/links.html", "/forms.html", "/classic.html", "/events.html", "/events.js");
+    private final int PORT = 9997;
+    private final List<String> validPaths = List.of("/index.html", "/spring.svg",
+            "/spring.png", "/resources.html",
+            "/styles.css", "/app.js", "/links.html",
+            "/forms.html", "/classic.html",
+            "/events.html", "/events.js");
 
 
     @Override
     public void run() {
         try (final var serverSocket = new ServerSocket(PORT)) {
-            for (int i = 1; i <= 100; i++) {
+            while (true) {
                 try (
                         final var socket = serverSocket.accept();
                         final var in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -27,6 +31,12 @@ public class Server implements Runnable {
                 ) {
                     final var requestLine = in.readLine();
                     final var parts = requestLine.split(" ");
+
+                    if (parts.length != 3) {
+                        // just close socket
+                        continue;
+                    }
+
                     final var path = parts[1];
 
 

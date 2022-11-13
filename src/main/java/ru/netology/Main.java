@@ -9,8 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
         ExecutorService executorService = Executors.newFixedThreadPool(MAX_THREADS);
+        executorService.execute(new Server());
 
-        Server server = new Server();
-        executorService.execute(server);
     }
 }
