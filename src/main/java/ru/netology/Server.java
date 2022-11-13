@@ -50,8 +50,6 @@ public class Server implements Runnable {
                         Files.copy(filePath, out);
                         out.flush();
                     }
-
-
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
