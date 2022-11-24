@@ -31,13 +31,17 @@ public class MonoThreadClientHandler implements Runnable {
             String requestLine = in.readLine();
             String[] parts = requestLine.split(" ");
 
+            Request request = new Request(parts[0], parts[1]);
+
             if (parts.length != 3) {
                 // just close socket
                 socket.close();
 //                    continue;
+            } else {
+                printRequestDebug(request);
             }
 
-            Request request = new Request(parts[0], parts[1]);
+
             if (request.getMethod() == null || !handlers.containsKey(request.getMethod())) {
                 responseLack(out, "404", "Request Not Found");
 //                    continue;
@@ -101,5 +105,19 @@ public class MonoThreadClientHandler implements Runnable {
                         "\r\n"
         ).getBytes());
         out.flush();
+    }
+
+    private void printRequestDebug(Request request) {
+        System.out.println("Request debug information: ");
+        System.out.println("METHOD: " + request.getMethod());
+        System.out.println("PATH: " + request.getPath());
+        System.out.println("---HEADERS:---Начало---");
+        for (String header : request.getHeaders()) {
+            System.out.println(header);
+        }
+        System.out.println("---HEADERS:---Конец---");
+        System.out.println("BODY: " + request.getQueryParams());
+        System.out.println("BODY Test login: " + request.getQueryParam("login"));
+        System.out.println("BODY Test password: " + request.getQueryParam("password"));
     }
 }
